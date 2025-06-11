@@ -65,7 +65,7 @@ HTTP_STATUS=$(curl -s -o response.txt -w "%{http_code}" -X POST "$PAD_SERVICE_UR
     "pad_key": "'"$PAD_KEY"'"
   }')
 
-if [[ "$HTTP_STATUS" -ne 200 ]]; then
+if [[ "$HTTP_STATUS" -ne 200 && "$HTTP_STATUS" -ne 201 ]]; then
   echo "❌ Failed to create pad (HTTP $HTTP_STATUS)"
   cat response.txt
   exit 1
