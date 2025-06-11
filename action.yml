@@ -38,6 +38,6 @@ runs:
           "${{ inputs.bp_api_key }}" \
           "${{ inputs.name }}" \
           "${{ inputs.user }}" \
-          "${{ inputs.upload_dir }}"
+          "${{ inputs.upload_dir }}" \
           "${{ inputs.pad_service_url }}"
       shell: bash
