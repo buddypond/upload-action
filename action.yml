@@ -16,8 +16,12 @@ inputs:
     default: ${{ github.workspace }}
     required: false
   uploads_service_url:
-    description: "BuddyPond upload endpoint"
+    description: "BuddyPond Upload endpoint"
     default: "https://uploads.buddypond.com/generate-signed-url"
+    required: false
+  pad_service_url:
+    description: "BuddyPond Pad Service URL"
+    default: "https://a.buddypond.com"
     required: false
 runs:
   using: "composite"

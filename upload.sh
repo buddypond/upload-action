@@ -8,6 +8,7 @@ ME="$3"
 USER_FOLDER="$3"
 UPLOAD_FOLDER="$4"
 UPLOAD_DIR="$5"
+PAD_SERVICE_URL="$6"
 
 # Input validation
 if [[ -z "$BP_API_KEY" ]]; then
@@ -15,7 +16,7 @@ if [[ -z "$BP_API_KEY" ]]; then
   exit 1
 fi
 
-if [[ -z "$USER" ]]; then
+if [[ -z "$ME" ]]; then
   echo "❌ Missing required input: user"
   exit 1
 fi
@@ -34,6 +35,26 @@ if [ ! -d "$UPLOAD_DIR" ]; then
   echo "Directory not found: $UPLOAD_DIR"
   exit 1
 fi
+
+# first create the pad
+echo "🔧 Creating pad for user: $ME"
+PAD_TITLE="$USER_FOLDER"  # Use the folder name as the pad title
+PAD_KEY="$USER_FOLDER"  # Use the folder name as the pad key
+
+echo "Pad Key: $PAD_KEY"
+
+RESPONSE=$(curl -s -X POST "$PAD_SERVICE_URL" \
+  -H "Content-Type: application/json" \
+  -H "bp-api-key: $BP_API_KEY" \
+  -H "x-me: $ME" \
+  -d '{
+    "title": "'"$PAD_TITLE"'",
+    "pad_key": "'"$PAD_KEY"'"
+  }')
+
+# Output response
+echo "API Response:"
+echo "$RESPONSE"
 
 echo "🔍 Scanning files from: $UPLOAD_DIR"
 
