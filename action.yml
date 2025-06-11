@@ -1,0 +1,37 @@
+name: "BuddyPond Upload Action"
+description: "Uploads static files to BuddyPond Pads via signed upload URLs"
+author: "BuddyPond"
+inputs:
+  bp_api_key:
+    description: "Your BuddyPond API key"
+    required: true
+  user:
+    description: "Your BuddyPond username"
+    required: true
+  folder:
+    description: "Path in your BuddyPond storage to upload files to"
+    required: true
+  upload_dir:
+    description: "Directory to upload (typically the repo root)"
+    default: ${{ github.workspace }}
+    required: false
+  uploads_service_url:
+    description: "BuddyPond upload endpoint"
+    default: "https://uploads.buddypond.com/generate-signed-url"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Install file command
+      run: sudo apt-get update && sudo apt-get install -y file
+      shell: bash
+
+    - name: Upload to BuddyPond
+      run: |
+        bash ${{ github.action_path }}/upload.sh \
+          "${{ inputs.uploads_service_url }}" \
+          "${{ inputs.bp_api_key }}" \
+          "${{ inputs.user }}" \
+          "${{ inputs.folder }}" \
+          "${{ inputs.upload_dir }}"
+      shell: bash
