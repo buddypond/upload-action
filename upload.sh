@@ -9,6 +9,27 @@ USER_FOLDER="$3"
 UPLOAD_FOLDER="$4"
 UPLOAD_DIR="$5"
 
+# Input validation
+if [[ -z "$BP_API_KEY" ]]; then
+  echo "❌ Missing required input: bp_api_key"
+  exit 1
+fi
+
+if [[ -z "$USER" ]]; then
+  echo "❌ Missing required input: user"
+  exit 1
+fi
+
+if [[ -z "$FOLDER" ]]; then
+  echo "❌ Missing required input: folder"
+  exit 1
+fi
+
+# Set default upload dir if not provided
+if [[ -z "$UPLOAD_DIR" ]]; then
+  UPLOAD_DIR="${GITHUB_WORKSPACE}"
+fi
+
 if [ ! -d "$UPLOAD_DIR" ]; then
   echo "Directory not found: $UPLOAD_DIR"
   exit 1
