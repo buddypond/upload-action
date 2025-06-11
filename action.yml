@@ -22,7 +22,7 @@ inputs:
     required: false
   pad_service_url:
     description: "BuddyPond Pad Service URL"
-    default: "https://a.buddypond.com"
+    default: "https://a.buddypond.com/api/v6/pads"
     required: false
 runs:
   using: "composite"
