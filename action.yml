@@ -8,9 +8,10 @@ inputs:
   user:
     description: "Your BuddyPond username"
     required: true
-  folder:
-    description: "Path in your BuddyPond storage to upload files to"
-    required: true
+  name:
+    description: "Name of the BuddyPond Pad to create"
+    default: "default-pad"
+    required: false
   upload_dir:
     description: "Directory to upload (typically the repo root)"
     default: ${{ github.workspace }}

@@ -4,9 +4,11 @@ set -e
 
 UPLOADS_SERVICE_URL="$1"
 BP_API_KEY="$2"
-ME="$3"
-USER_FOLDER="$3"
-UPLOAD_FOLDER="$4"
+PAD_NAME="$3"
+ME="$4"
+USER_FOLDER="$4"
+# UPLOAD_FOLDER should be "pads/PAD_NAME"
+UPLOAD_FOLDER="pads/$PAD_NAME"
 UPLOAD_DIR="$5"
 PAD_SERVICE_URL="$6"
 
@@ -21,8 +23,13 @@ if [[ -z "$ME" ]]; then
   exit 1
 fi
 
-if [[ -z "$UPLOAD_FOLDER" ]]; then
-  echo "❌ Missing required input: folder"
+if [[ -z "$PAD_NAME" ]]; then
+  echo "❌ Missing required input: name"
+  exit 1
+fi
+
+if [[ "$PAD_NAME" =~ [^a-zA-Z0-9_-] ]]; then
+  echo "❌ PAD_NAME contains invalid characters. Use only letters, numbers, dashes, or underscores."
   exit 1
 fi
 
@@ -36,14 +43,20 @@ if [ ! -d "$UPLOAD_DIR" ]; then
   exit 1
 fi
 
+if [[ -z "$PAD_SERVICE_URL" ]]; then
+  echo "❌ Missing required input: PAD_SERVICE_URL"
+  exit 1
+fi
+
 # first create the pad
 echo "🔧 Creating pad for user: $ME"
-PAD_TITLE="$USER_FOLDER"  # Use the folder name as the pad title
-PAD_KEY="$USER_FOLDER"  # Use the folder name as the pad key
+echo "Pad Name: $PAD_NAME"
+PAD_TITLE="$PAD_NAME"  # Use the folder name as the pad title
+PAD_KEY="$PAD_NAME"  # Use the folder name as the pad key
 
 echo "Pad Key: $PAD_KEY"
 
-RESPONSE=$(curl -s -X POST "$PAD_SERVICE_URL" \
+HTTP_STATUS=$(curl -s -o response.txt -w "%{http_code}" -X POST "$PAD_SERVICE_URL" \
   -H "Content-Type: application/json" \
   -H "bp-api-key: $BP_API_KEY" \
   -H "x-me: $ME" \
@@ -52,9 +65,14 @@ RESPONSE=$(curl -s -X POST "$PAD_SERVICE_URL" \
     "pad_key": "'"$PAD_KEY"'"
   }')
 
-# Output response
-echo "API Response:"
-echo "$RESPONSE"
+if [[ "$HTTP_STATUS" -ne 200 ]]; then
+  echo "❌ Failed to create pad (HTTP $HTTP_STATUS)"
+  cat response.txt
+  exit 1
+fi
+
+echo "✅ Pad created:"
+cat response.txt
 
 echo "🔍 Scanning files from: $UPLOAD_DIR"
 
