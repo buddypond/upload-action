@@ -20,7 +20,7 @@ if [[ -z "$USER" ]]; then
   exit 1
 fi
 
-if [[ -z "$FOLDER" ]]; then
+if [[ -z "$UPLOAD_FOLDER" ]]; then
   echo "❌ Missing required input: folder"
   exit 1
 fi
