@@ -36,7 +36,8 @@ runs:
         bash ${{ github.action_path }}/upload.sh \
           "${{ inputs.uploads_service_url }}" \
           "${{ inputs.bp_api_key }}" \
+          "${{ inputs.name }}" \
           "${{ inputs.user }}" \
-          "${{ inputs.folder }}" \
           "${{ inputs.upload_dir }}"
+          "${{ inputs.pad_service_url }}"
       shell: bash
